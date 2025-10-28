@@ -1,0 +1,35 @@
+name: Build and run Dockerfile
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  build-and-run:
+    name: Build image and run container
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up QEMU and buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build Docker image
+        uses: docker/build-push-action@v4
+        with:
+          context: .
+          file: ./Dockerfile
+          push: false
+          tags: qr-gen-app:latest
+
+      - name: List local images (debug)
+        run: docker images --format 'table {{.Repository}}\t{{.Tag}}\t{{.ID}}\t{{.Size}}'
+
+      - name: Run the image and execute the app
+        # This runs `python main.py` inside the built image; if your image's Dockerfile
+        # already defines an ENTRYPOINT/CMD that runs the app, you can remove the command
+        # after the image name. The step will fail if the container exits with a non-zero code.
+        run: |
+          docker run --rm --name qr_test qr-gen-app:latest python main.py
