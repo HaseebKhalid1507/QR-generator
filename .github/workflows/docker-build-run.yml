@@ -37,4 +37,4 @@ jobs:
         # already runs the app via CMD/ENTRYPOINT. No Docker Hub login or push is
         # performed because the image/repo is public and we only run locally here.
         run: |
-          docker run --rm --name qr_test ${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }} python main.py
+          docker run --rm --name qr_test ${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }}
